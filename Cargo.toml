@@ -1,0 +1,12 @@
+[package]
+name = "sorted-vec"
+version = "0.0.1"
+authors = ["Michael Neumann <mneumann@ntecs.de>"]
+license = "MIT"
+repository = "https://github.com/mneumann/sorted-vec-rs"
+description = "Sorted vector"
+keywords = ["vec", "sorted", "vector", "algorithm"]
+
+include = ["src/*.rs", "Cargo.toml", "LICENSE", "README.md"]
+
+[dependencies]

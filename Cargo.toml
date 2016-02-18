@@ -8,5 +8,3 @@ description = "Sorted vector"
 keywords = ["vec", "sorted", "vector", "algorithm"]
 
 include = ["src/*.rs", "Cargo.toml", "LICENSE", "README.md"]
-
-[dependencies]

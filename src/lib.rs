@@ -14,6 +14,12 @@ fn is_sorted_unique<T: Ord>(slice: &[T]) -> bool {
     }
 }
 
+pub enum LeftOrRight {
+    Left,
+    Right,
+}
+
+
 impl<T: Ord + Clone> SortedUniqueVec<T> {
     pub fn new() -> Self {
         SortedUniqueVec { vec: Vec::new() }
@@ -42,7 +48,10 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
     }
 
     /// Merges `self` and `other` into a new SortedVec.
-    pub fn merge(&self, other: &Self) -> Self {
+    /// `choose_equal` decides which one of two equal values to take.
+    pub fn merge<F>(&self, other: &Self, choose_equal: &F) -> Self
+        where F: Fn(&T, &T) -> LeftOrRight
+    {
         let mut vec = Vec::with_capacity(self.len() + other.len());
 
         let mut left_iter = self.vec.iter().peekable();
@@ -89,9 +98,15 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
                 Take::Both => {
                     // two equal values
                     let left_value = left_iter.next().unwrap();
-                    let _right_value = right_iter.next().unwrap();
-                    // XXX: decide which one to copy
-                    vec.push((*left_value).clone());
+                    let right_value = right_iter.next().unwrap();
+                    match choose_equal(left_value, right_value) {
+                        LeftOrRight::Left => {
+                            vec.push((*left_value).clone());
+                        }
+                        LeftOrRight::Right => {
+                            vec.push((*right_value).clone());
+                        }
+                    }
                 }
                 Take::AllLeft => {
                     for item in left_iter {
@@ -157,7 +172,7 @@ fn test_merge() {
     s2.insert(9);
     assert!(is_sorted_unique(&s2));
 
-    let r = s1.merge(&s2);
+    let r = s1.merge(&s2, &|_, _| LeftOrRight::Left);
     assert!(is_sorted_unique(&r));
     assert_eq!(&[0, 1, 5, 7, 8, 9, 55][..], r.as_ref());
 }

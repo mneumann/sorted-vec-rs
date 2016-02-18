@@ -24,6 +24,14 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
         SortedUniqueVec { vec: Vec::new() }
     }
 
+    /// Panics if sorted order is destroyed by this push operation.
+    pub fn push(&mut self, item: T) {
+        if let Some(last_item) = self.last() {
+            assert!(last_item < &item);
+        }
+        self.vec.push(item);
+    }
+
     pub fn len(&self) -> usize {
         self.vec.len()
     }
@@ -174,4 +182,34 @@ fn test_merge() {
     let r = s1.merge(&s2, &|_, _| LeftOrRight::Left);
     assert!(is_sorted_unique(&r));
     assert_eq!(&[0, 1, 5, 7, 8, 9, 55][..], r.as_ref());
+}
+
+#[test]
+fn test_push_ok() {
+    let mut s = SortedUniqueVec::new();
+    s.push(0);
+    s.push(5);
+    s.push(6);
+    assert!(is_sorted_unique(&s));
+    assert_eq!(3, s.len());
+    assert_eq!(&[0, 5, 6][..], s.as_ref());
+}
+
+#[test]
+#[should_panic]
+fn test_push_fail() {
+    let mut s = SortedUniqueVec::new();
+    s.push(0);
+    s.push(1);
+    s.push(1);
+}
+
+#[test]
+#[should_panic]
+fn test_push_fail2() {
+    let mut s = SortedUniqueVec::new();
+    s.push(0);
+    s.push(5);
+    s.push(9);
+    s.push(3);
 }

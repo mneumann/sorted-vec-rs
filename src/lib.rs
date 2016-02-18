@@ -1,4 +1,7 @@
+use std::ops::Deref;
+
 /// A `Vec` in sorted order without duplicates.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SortedUniqueVec<T: Ord + Clone> {
     vec: Vec<T>,
 }
@@ -117,6 +120,14 @@ impl<T: Ord + Clone> AsRef<[T]> for SortedUniqueVec<T> {
     }
 }
 
+impl<T: Ord + Clone> Deref for SortedUniqueVec<T> {
+    type Target = [T];
+
+    fn deref(&self) -> &[T] {
+        &self.vec
+    }
+}
+
 #[test]
 fn test_insert() {
     let mut s = SortedUniqueVec::new();
@@ -124,8 +135,8 @@ fn test_insert() {
     s.insert(1);
     s.insert(8);
     s.insert(0);
-    assert!(is_sorted_unique(s.as_ref()));
-    assert_eq!(&[0, 1, 5, 8], s.as_ref());
+    assert!(is_sorted_unique(&s));
+    assert_eq!(&[0, 1, 5, 8][..], s.as_ref());
     assert_eq!(4, s.len());
 }
 
@@ -136,7 +147,7 @@ fn test_merge() {
     s1.insert(1);
     s1.insert(8);
     s1.insert(0);
-    assert!(is_sorted_unique(s1.as_ref()));
+    assert!(is_sorted_unique(&s1));
 
     let mut s2 = SortedUniqueVec::new();
     s2.insert(55);
@@ -144,9 +155,9 @@ fn test_merge() {
     s2.insert(5);
     s2.insert(7);
     s2.insert(9);
-    assert!(is_sorted_unique(s2.as_ref()));
+    assert!(is_sorted_unique(&s2));
 
     let r = s1.merge(&s2);
-    assert!(is_sorted_unique(r.as_ref()));
-    assert_eq!(&[0, 1, 5, 7, 8, 9, 55], r.as_ref());
+    assert!(is_sorted_unique(&r));
+    assert_eq!(&[0, 1, 5, 7, 8, 9, 55][..], r.as_ref());
 }

@@ -24,6 +24,10 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
         SortedUniqueVec { vec: Vec::new() }
     }
 
+    pub fn with_capacity(capa: usize) -> Self {
+        SortedUniqueVec { vec: Vec::with_capacity(capa) }
+    }
+
     /// Panics if sorted order is destroyed by this push operation.
     pub fn push(&mut self, item: T) {
         if let Some(last_item) = self.last() {

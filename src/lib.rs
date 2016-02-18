@@ -1,4 +1,5 @@
-pub struct SortedVec<T: Ord + Clone> {
+/// A `Vec` in sorted order without duplicates.
+pub struct SortedUniqueVec<T: Ord + Clone> {
     vec: Vec<T>,
 }
 
@@ -10,9 +11,9 @@ fn is_sorted_unique<T: Ord>(slice: &[T]) -> bool {
     }
 }
 
-impl<T: Ord + Clone> SortedVec<T> {
+impl<T: Ord + Clone> SortedUniqueVec<T> {
     pub fn new() -> Self {
-        SortedVec { vec: Vec::new() }
+        SortedUniqueVec { vec: Vec::new() }
     }
 
     pub fn len(&self) -> usize {
@@ -24,7 +25,7 @@ impl<T: Ord + Clone> SortedVec<T> {
     }
 
     /// Insert `element` into the sorted list.
-    /// 
+    ///
     /// Panics if an element with the same key (according to the Eq trait) already exists.
     pub fn insert(&mut self, element: T) {
         match self.vec.binary_search(&element) {
@@ -106,11 +107,11 @@ impl<T: Ord + Clone> SortedVec<T> {
         }
 
         debug_assert!(is_sorted_unique(&vec));
-        SortedVec { vec: vec }
+        SortedUniqueVec { vec: vec }
     }
 }
 
-impl<T: Ord + Clone> AsRef<[T]> for SortedVec<T> {
+impl<T: Ord + Clone> AsRef<[T]> for SortedUniqueVec<T> {
     fn as_ref(&self) -> &[T] {
         &self.vec
     }
@@ -118,7 +119,7 @@ impl<T: Ord + Clone> AsRef<[T]> for SortedVec<T> {
 
 #[test]
 fn test_insert() {
-    let mut s = SortedVec::new();
+    let mut s = SortedUniqueVec::new();
     s.insert(5);
     s.insert(1);
     s.insert(8);
@@ -130,14 +131,14 @@ fn test_insert() {
 
 #[test]
 fn test_merge() {
-    let mut s1 = SortedVec::new();
+    let mut s1 = SortedUniqueVec::new();
     s1.insert(5);
     s1.insert(1);
     s1.insert(8);
     s1.insert(0);
     assert!(is_sorted_unique(s1.as_ref()));
 
-    let mut s2 = SortedVec::new();
+    let mut s2 = SortedUniqueVec::new();
     s2.insert(55);
     s2.insert(1);
     s2.insert(5);

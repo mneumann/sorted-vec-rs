@@ -1,5 +1,4 @@
 use std::ops::Deref;
-pub mod align;
 
 /// A `Vec` in sorted order without duplicates.
 #[derive(Debug, Clone, PartialEq, Eq)]

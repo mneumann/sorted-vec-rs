@@ -1,4 +1,5 @@
 use std::ops::Deref;
+use std::cmp::Ordering;
 
 /// A `Vec` in sorted order without duplicates.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -42,6 +43,15 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
 
     pub fn contains(&self, element: &T) -> bool {
         self.vec.binary_search(element).is_ok()
+    }
+
+    pub fn find_by<F>(&self, f: F) -> Option<&T>
+        where F: FnMut(&T) -> Ordering
+    {
+        match self.vec.binary_search_by(f) {
+            Ok(idx) => self.vec.get(idx),
+            Err(_) => None,
+        }
     }
 
     /// Insert `element` into the sorted list.

@@ -51,6 +51,23 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
         self.vec.binary_search(element).is_ok()
     }
 
+    pub fn get(&self, idx: usize) -> Option<&T> {
+        self.vec.get(idx)
+    }
+
+    pub fn get_mut(&mut self, idx: usize) -> Option<&mut T> {
+        self.vec.get_mut(idx)
+    }
+
+    pub fn index_by<F>(&self, f: F) -> Option<usize>
+        where F: FnMut(&T) -> Ordering
+    {
+        match self.vec.binary_search_by(f) {
+            Ok(idx) => Some(idx),
+            Err(_) => None,
+        }
+    }
+
     pub fn find_by<F>(&self, f: F) -> Option<&T>
         where F: FnMut(&T) -> Ordering
     {

@@ -37,6 +37,12 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
         self.vec.push(item);
     }
 
+    pub fn retain<F>(&mut self, f: F)
+        where F: FnMut(&T) -> bool
+    {
+        self.vec.retain(f);
+    }
+
     pub fn len(&self) -> usize {
         self.vec.len()
     }

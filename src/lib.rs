@@ -55,8 +55,14 @@ impl<T: Ord + Clone> SortedUniqueVec<T> {
         self.vec.get(idx)
     }
 
+    /// Note: This can destroy the sort order!
     pub fn get_mut(&mut self, idx: usize) -> Option<&mut T> {
         self.vec.get_mut(idx)
+    }
+
+    /// Note: This can destroy the sort order!
+    pub fn slice_mut(&mut self) -> &mut[T] {
+        &mut self.vec[..]
     }
 
     pub fn index_by<F>(&self, f: F) -> Option<usize>
